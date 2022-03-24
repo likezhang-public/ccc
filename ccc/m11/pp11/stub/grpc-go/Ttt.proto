@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package m11.pp11;
+
+option go_package="github.com/ccc/m11/pp11/grpc-go/stubs";
+
+
+service Ttt {
+    rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+
+message HelloRequest {
+    string msg = 1;
+}
+message HelloReply {
+    string msg = 1;
+    string code = 2;
+}
