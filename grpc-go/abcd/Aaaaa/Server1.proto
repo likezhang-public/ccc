@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package abcd.Aaaaa;
+
+option go_package="github.com/likezhang-public/ccc/grpc-go/abcd/Aaaaa";
+
+
+service Server1 {
+    rpc SayHello (HelloRequest) returns (HelloReply);
+}
+
+
+message HelloRequest {
+    string msg = 1;
+}
+message HelloReply {
+    string msg = 1;
+    string code = 2;
+}
