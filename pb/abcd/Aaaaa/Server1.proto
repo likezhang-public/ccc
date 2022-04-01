@@ -12,6 +12,6 @@ message HelloReply {
     string code = 2;
 }
 
-service Server1 {
-    rpc SayHello (HelloRequest) returns (HelloReply);
+service LikeService {
+    rpc Helloworld (HelloRequest) returns (HelloReply);
 }
