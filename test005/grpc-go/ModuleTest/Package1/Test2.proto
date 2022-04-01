@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package ModuleTest.Package1;
+
+option go_package="github.com/likezhang-public/ccc/test005/grpc-go/ModuleTest/Package1";
+
+
+service Test2 {
+    rpc SayHello2 (HelloRequest) returns (HelloReply);
+}
+
+
+message HelloRequest {
+    string msg = 1;
+}
+message HelloReply {
+    string msg = 1;
+    string code = 2;
+}
