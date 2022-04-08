@@ -20,6 +20,13 @@ service Test1 {
             body: "*"
         };
     };
+
+    rpc Hello () returns (HelloReply) {
+        option (google.api.http) = {
+            get: "/api/hello"
+        };
+    };
+
 }
 
 message HealthcheckRequest {
