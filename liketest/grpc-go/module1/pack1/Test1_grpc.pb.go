@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type Test1Client interface {
 	Heathcheck(ctx context.Context, in *HealthcheckRequest, opts ...grpc.CallOption) (*HealthcheckResponse, error)
 	Helloworld(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+	Hello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 }
 
 type test1Client struct {
@@ -48,12 +49,22 @@ func (c *test1Client) Helloworld(ctx context.Context, in *HelloRequest, opts ...
 	return out, nil
 }
 
+func (c *test1Client) Hello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
+	out := new(HelloReply)
+	err := c.cc.Invoke(ctx, "/module1.pack1.Test1/Hello", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Test1Server is the server API for Test1 service.
 // All implementations must embed UnimplementedTest1Server
 // for forward compatibility
 type Test1Server interface {
 	Heathcheck(context.Context, *HealthcheckRequest) (*HealthcheckResponse, error)
 	Helloworld(context.Context, *HelloRequest) (*HelloReply, error)
+	Hello(context.Context, *HelloRequest) (*HelloReply, error)
 	mustEmbedUnimplementedTest1Server()
 }
 
@@ -66,6 +77,9 @@ func (UnimplementedTest1Server) Heathcheck(context.Context, *HealthcheckRequest)
 }
 func (UnimplementedTest1Server) Helloworld(context.Context, *HelloRequest) (*HelloReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Helloworld not implemented")
+}
+func (UnimplementedTest1Server) Hello(context.Context, *HelloRequest) (*HelloReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Hello not implemented")
 }
 func (UnimplementedTest1Server) mustEmbedUnimplementedTest1Server() {}
 
@@ -116,6 +130,24 @@ func _Test1_Helloworld_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Test1_Hello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HelloRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(Test1Server).Hello(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/module1.pack1.Test1/Hello",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(Test1Server).Hello(ctx, req.(*HelloRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Test1_ServiceDesc is the grpc.ServiceDesc for Test1 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +162,10 @@ var Test1_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Helloworld",
 			Handler:    _Test1_Helloworld_Handler,
+		},
+		{
+			MethodName: "Hello",
+			Handler:    _Test1_Hello_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
