@@ -21,7 +21,7 @@ service Test1 {
         };
     };
 
-    rpc Hello () returns (HelloReply) {
+    rpc Hello (HelloRequest) returns (HelloReply) {
         option (google.api.http) = {
             get: "/api/hello"
         };
